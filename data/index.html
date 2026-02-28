@@ -1,0 +1,115 @@
+<!doctype html><html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SHT4x Dew Point</title>
+  <!-- Global styles -->
+  <style>
+    :root { --fg:#e5e7eb; --mut:#9ca3af; --b:#1f2937; --c1:#60a5fa; --c2:#34d399; --warn:#f87171; --ok:#34d399; --bg:#0b1220; --card:#0f172a; --box:#020617; --btn:#111827; --btnh:#1f2937 }
+    
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:16px;color:var(--fg);background:var(--bg)}
+    .card{max-width:920px;margin:auto;border:1px solid var(--b);border-radius:12px;padding:16px;background:var(--card)}
+    
+    h1{margin:0 0 8px;font-size:20px}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .box{flex:1;min-width:220px;border:1px solid var(--b);border-radius:10px;padding:10px;background:var(--box)}
+    .label{color:var(--mut);font-size:.9rem}
+    .val{font-weight:700;font-size:1.4rem}
+    .muted{color:var(--mut);font-size:.85rem;margin-top:6px}
+    
+    canvas{width:100%;height:300px;border:1px solid var(--b);border-radius:10px;display:block;margin-top:10px;background:var(--box)}
+    .legend{display:flex;gap:12px;align-items:center;margin-top:8px;flex-wrap:wrap}
+    .dot{width:10px;height:10px;border-radius:50%}
+    .a{background:var(--c1)} .b{background:var(--c2)}
+    .pill{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid var(--b);font-size:.85rem;background:var(--box)}
+    .pill.ok{color:var(--ok);border-color:var(--ok)} .pill.bad{color:var(--warn);border-color:var(--warn)}
+    
+    button{padding:6px 10px;border:1.5px solid #334155;background:var(--btn);color:var(--fg);border-radius:8px;cursor:pointer}
+    button:hover{border-color:#60a5fa}
+
+    /* Centered reboot message layout */
+    .center-full {
+      position: fixed; inset: 0;
+      display: none; align-items: center; justify-content: center;
+      background: var(--bg); color: var(--fg); font-size: 1rem;
+    }
+
+  </style>
+  <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+  <div class="card" id="appRoot">
+    <h1>SHT4x Dew Point Monitor</h1>
+    <!-- SD purge warning banner -->
+    <div id="sdWarn" class="box" style="display:none;border-color:var(--warn);">
+      <b style="color:var(--warn)">⚠ SD purge warning</b><br>
+      <span id="sdWarnMsg">--</span>
+    </div>
+
+    <div class="row">
+      <div class="box">
+        <div class="label">Indoor (Sensor A)</div>
+        <div class="val"><span id="dewA">--</span> °C</div>
+        <div class="muted">T: <span id="tA">--</span> °C • RH: <span id="hA">--</span> %</div>
+      </div>
+      <div class="box">
+        <div class="label">Outdoor (Sensor B)</div>
+        <div class="val"><span id="dewB">--</span> °C</div>
+        <div class="muted">T: <span id="tB">--</span> °C • RH: <span id="hB">--</span> %</div>
+      </div>
+    </div>
+
+    <!-- Mode / Fan status -->
+    <div class="muted" style="margin-top:6px">
+      Comfort hint: dew point ~4–16.5 °C. 
+      ΔDew = <b><span id="dd">--</span> °C</b> • Fan: <span id="sv" class="pill">--</span>
+      <span id="modePill" class="pill" style="margin-left:8px">--</span>
+    </div>
+
+    <!-- Dew chart + Buttons (top) -->
+    <div class="legend">
+      <div class="dot a"></div><div>Dew A</div>
+      <div class="dot b"></div><div>Dew B</div>
+      <span style="flex:1"></span>
+      <button id="clear">Clear</button>
+      <button id="export">Download CSV</button>
+      <button id="fanBtn">Disable Fan</button>
+      
+      <!-- ZIP download (SD) -->
+      <select id="daySel" class="pill" style="padding:6px 10px;background:var(--btn);color:var(--fg);">
+        <option value="">Select day...</option>
+      </select>
+      <button id="zipBtn">Download ZIP</button>
+
+      <!-- open OTA page -->
+      <button onclick="location.href='/ota.html'">Update Software</button>
+      <!-- reboot button -->
+      <button id="rebootBtn" style="border-color:var(--warn);color:var(--warn)">Reboot Device</button>
+    </div>
+    <canvas id="plot" width="800" height="300"></canvas>
+
+    <!-- Temp + Humidity chart (bottom) -->
+    <div class="legend" style="margin-top:16px">
+      <div class="dot" style="background:#f87171"></div><div>Temp A (°C)</div>
+      <div class="dot" style="background:#60a5fa"></div><div>Temp B (°C)</div>
+      <div class="dot" style="background:#fbbf24;margin-left:12px"></div><div>RH A (%)</div>
+      <div class="dot" style="background:#34d399"></div><div>RH B (%)</div>
+      <span style="flex:1"></span>
+      <span class="muted">Single scale (0–100)</span>
+    </div>
+
+    <!-- Plot -->
+    <canvas id="thPlot" width="800" height="300"></canvas>
+    <div class="muted">Polling every 5 s • Buffer: 1000 points ~83 min</div>
+  </div>
+
+  <!-- Centered overlay for reboot -->
+  <div id="rebootOverlay" class="center-full">
+    <div>rebooting system, please wait..</div>
+  </div>
+
+  <!-- App JS -->
+  <script src="/app.js"></script>
+  <script src="/jszip.min.js"></script>
+</body>
+</html>
