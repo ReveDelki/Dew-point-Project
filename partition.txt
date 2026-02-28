@@ -1,0 +1,52 @@
+Total mem 0x00400000 = 4,194,304 bytes = 4 MB
+
+nvs
+
+Type: data
+SubType: nvs
+Offset: 0x9000
+Size: 0x5000 = 20,480 B = 20 KB
+
+Note: Non-Volatile Storage (NVS) — stores Wi-Fi credentials, calibration values, and app/device settings 
+
+**********************************************************************************************************************************************************
+
+phy_init
+
+Type: data
+SubType: phy
+Offset: 0xF000
+Size: 0x1000 = 4,096 B = 4 KB
+
+Note: PHY init / RF calibration data — used by Wi-Fi/Bluetooth for radio calibration. ESP32 uses it automatically.
+
+**********************************************************************************************************************************************************
+
+app0
+
+Type: app
+SubType: ota_0
+Offset: 0x10000
+Size: 0x1E0000 = 1,966,080 B ≈ 1.875 MB
+
+Note: Firmware slot (Main compiled program). PlatformIO flashes firmware.bin here.
+
+**********************************************************************************************************************************************************
+
+spiffs
+
+Type: data
+SubType: spiffs
+Offset: 0x1F0000
+Size: 0x200000 = 2,097,152 B = 2.0 MB
+
+Note: Filesystem partition used by LittleFS (web UI: index.html, app.js, ota.html, assets). Mounted by LittleFS.begin().
+
+**********************************************************************************************************************************************************
+
+remaining (unused)
+
+Offset: 0x3F0000
+Size: 0x10000 = 65,536 B = 64 KB
+
+Note: Unallocated flash space (padding / spare). Not used unless you redesign the partition table.
