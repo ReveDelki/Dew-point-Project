@@ -1,6 +1,9 @@
 # Dew-point-Observation Controller
 
 The product is a Steckergehäuse which can connect with external 230VAC Load during operating and includes:
-•	Automatic humidity control based on real-time dew point comparison.
-•	A product box with local display via the TTGO ESP32 LCD module showing humidity, temperature, dew point, fan status and 230 V EU socket power supply.
-•	Web-based dashboard (HTML + JavaScript) with real-time data visualization, control buttons (Fan Control, Reset Device, ...), historical graphs, CSV export and Data log download capabilities. 
+
+Automatic humidity control based on real-time dew point comparison.
+
+A product box with local display via the TTGO ESP32 LCD module showing humidity, temperature, dew point, fan status and 230 V EU socket power supply.
+
+Web-based dashboard (HTML + JavaScript) with real-time data visualization, control buttons (Fan Control, Reset Device, ...), historical graphs, CSV export and Data log download capabilities. 
