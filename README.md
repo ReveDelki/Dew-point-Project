@@ -9,3 +9,5 @@ A product box with local display via the TTGO ESP32 LCD module showing humidity,
 Web-based dashboard (HTML + JavaScript) with real-time data visualization, control buttons (Fan Control, Reset Device, ...), historical graphs, CSV export and Data log download capabilities. 
 
 <img width="885" height="888" alt="image" src="https://github.com/user-attachments/assets/b7057d12-3c86-4de1-a564-aa5a5518f37d" />
+
+<img width="657" height="876" alt="image" src="https://github.com/user-attachments/assets/11ce7ce9-e50b-48a6-a360-4183020d4968" />
