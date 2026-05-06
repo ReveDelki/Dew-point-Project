@@ -76,7 +76,7 @@ static String isoNow() {
   time_t now = time(nullptr);
   struct tm t;
   localtime_r(&now, &t);
-
+  // Format into buff and return as string
   char buf[32];
   snprintf(buf, sizeof(buf),
            "%04d-%02d-%02dT%02d:%02d:%02d",
@@ -107,7 +107,7 @@ static inline String f2(float v) { return isfinite(v) ? String(v,2) : String("")
 // Open today's /DD-MM-YYYY/daily.csv (create if missing)
 static bool openDailyFileForToday() {
   closeLogFile();
-
+  
   String folder;
   getDateStrings(folder);
 
@@ -129,7 +129,7 @@ static bool openDailyFileForToday() {
   }
 
   if (!exists) {
-    // CSV header (German Excel friendly, you already use ';')
+    // CSV header (German Excel friendly, use ';')
     g_logFile.println("iso_time;tempA;rhA;dewA;tempB;rhB;dewB;deltaDew;fan;disabled");
     g_logFile.flush();
     Serial.printf("[SD] created: %s\n", path.c_str());
@@ -256,9 +256,9 @@ void sdLoggerWriteRow(const SDLogSample& s) {
   g_logFile.flush();
 }
 
-void sdLoggerEnd() {
-  closeLogFile();
-}
+//void sdLoggerEnd() {
+//  closeLogFile();
+//}
 
 bool sdLoggerGetPurgeInfo(time_t &purgeEpoch, int &daysLeft, bool &warn) {
   if (!timeValid()) {
